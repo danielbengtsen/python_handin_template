@@ -1,5 +1,6 @@
 import requests
 from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 import multiprocessing
 from tqdm import tqdm
 
@@ -22,16 +23,23 @@ class TextComparer:
             raise NotFoundException("No book was found using the given link!")
 
     def multi_download(self):
-        with ProcessPoolExecutor(multiprocessing.cpu_count()) as p:
+        with ThreadPoolExecutor(multiprocessing.cpu_count()) as p:
             for i in range(0, len(self.url_list)):
                 print("... downloading and writing file: " + str(i+1))
                 self.download(self.url_list[i], 'book' + str(i+1) + ".txt")
     
     def __iter__(self):
-        pass
+        self.n = 0
+        return self
 
     def __next__(self):
-        pass
+        if self.n != (len(self.url_list)):
+            # Using split('/') and last element "[-1]" to get filename 
+            result = self.url_list[self.n].split('/')[-1]
+            self.n += 1
+            return result
+        else:
+            raise StopIteration
 
     def urllist_generator(self):
         pass
