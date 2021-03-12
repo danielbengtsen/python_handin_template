@@ -42,7 +42,8 @@ class TextComparer:
             raise StopIteration
 
     def urllist_generator(self):
-        pass
+        for url in self.url_list:
+            yield url
 
     def avg_vowels(self, text):
         pass
