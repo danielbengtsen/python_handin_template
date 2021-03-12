@@ -3,6 +3,7 @@ from concurrent.futures import ProcessPoolExecutor
 from concurrent.futures import ThreadPoolExecutor
 import multiprocessing
 from tqdm import tqdm
+import pandas as pd
 
 class NotFoundException(Exception):
     pass
@@ -46,7 +47,23 @@ class TextComparer:
             yield url
 
     def avg_vowels(self, text):
-        pass
+        vowels = ['a', 'e', 'i', 'o', 'u']
+        word_count = 0
+        vowel_in_word_count = []
+        with open(text, 'r') as file_object:
+            for line in file_object:
+                for word in line.split():
+                    tmp_vowels = 0
+                    for char in word:
+                        if char in vowels:
+                            tmp_vowels += 1
+                    vowel_in_word_count.append(tmp_vowels)
+                    word_count += 1
+        vowel_sum = 0
+        for vowel_in_word in vowel_in_word_count:
+            vowel_sum += vowel_in_word
+        result = vowel_sum / word_count
+        return result
 
     def hardest_read(self):
         pass
